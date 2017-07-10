@@ -7,7 +7,10 @@
     サイドバーなどのブロック要素をスクロールに合わせて位置をFIXします。
     上にスクロールした時に固定されたサイドバーもすぐ上に戻るのが特徴です。
 
-    http://webwedge.jp/
+    @author webwedge http://webwedge.jp/
+    @version 0.5
+    @licensed MIT license
+
     2017/07/03 0.5
     2017/04/28 0.1
 
@@ -57,10 +60,10 @@
 
                 // data属性によるオプション設定
                 scrollContainer : (!$(this).data("frix-container")) ? null : $($(this).data("frix-container")),
-                fixed_target : (!$(this).data("frix-fixedtarget")) ? $(this).parent() : $($(this).data("frix-fixedtarget")),
-                minWidth : (!$(this).data("frix-minwidth")) ? -1 : $(this).data("frix-minwidth"),
-                maxWidth : (!$(this).data("frix-maxwidth")) ? -1 : $(this).data("frix-maxwidth"),
-                defaultMarginTop : (!$(this).data("frix-defaultmargintop")) ? 0 : $(this).data("frix-defaultmargintop"),
+                fixed_target : (!$(this).data("frix-fixed-target")) ? $(this).parent() : $($(this).data("frix-fixed-target")),
+                minWidth : (!$(this).data("frix-min-width")) ? -1 : $(this).data("frix-min-width"),
+                maxWidth : (!$(this).data("frix-max-width")) ? -1 : $(this).data("frix-max-width"),
+                defaultMarginTop : (!$(this).data("frix-scroll-margin-top")) ? 0 : $(this).data("frix-scroll-margin-top"),
 
                 // 状態
                 status : ""
@@ -136,10 +139,12 @@
                 if(obj.decoy.css("display")=="none") obj.decoy.css("display", "block");
                 ACTION(obj);
             }else {
+                // frix()が動作していない時
                 obj.decoy.css("display", "none");
                 obj.target.css({
                     position : obj.decoy.css("position"),
-                    top:0
+                    top:0,
+                    left:"initial"
                 })
             }
 
@@ -187,6 +192,8 @@
                 }else {
                     obj.top = obj.fixed_target.height() - obj.target.outerHeight() - parseInt(obj.target.css("margin-bottom"));
                 }
+
+                if(obj.fixed_target!==obj.target.parent()) obj.top  += parseInt(obj.fixed_target.css("margin-top"));
 
                 obj.target.css({
                     position : "absolute",
@@ -381,13 +388,9 @@
         // スクロール固定が停止するボトムラインの位置を取得
         function getBottomY(obj) {
 
-            var top;
+            var top = obj.fixed_target.offset().top;
 
-            if(obj.scrollContainer) {
-                top = obj.fixed_target.offset().top + obj.scrollContainer.scrollTop();
-            }else {
-                top = obj.fixed_target.offset().top;
-            }
+            if(obj.scrollContainer) top += obj.scrollContainer.scrollTop();
 
             return top + obj.fixed_target.height()
         }
@@ -457,6 +460,14 @@
             if(obj.css("right")!=="auto") decoy.css("right", obj.css("right"));
             if(obj.css("top")!=="auto") decoy.css("top", obj.css("top"));
             if(obj.css("float")!=="none") decoy.css("float", obj.css("float"));
+            if(parseInt(obj.css("margin-right"))!==0) decoy.css("margin-right", obj.css("margin-right"));
+            if(parseInt(obj.css("margin-left"))!==0) decoy.css("margin-left", obj.css("margin-left"));
+            if(parseInt(obj.css("margin-top"))!==0) decoy.css("margin-top", obj.css("margin-top"));
+            if(parseInt(obj.css("margin-bottom"))!==0) decoy.css("margin-bottom", obj.css("margin-bottom"));
+            if(parseInt(obj.css("padding-right"))!==0) decoy.css("padding-right", obj.css("padding-right"));
+            if(parseInt(obj.css("padding-left"))!==0) decoy.css("padding-left", obj.css("padding-left"));
+            if(parseInt(obj.css("padding-top"))!==0) decoy.css("padding-top", obj.css("padding-top"));
+            if(parseInt(obj.css("padding-bottom"))!==0) decoy.css("padding-bottom", obj.css("padding-bottom"));
             return decoy;
 
         }
