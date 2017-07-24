@@ -11,6 +11,7 @@
     @version 0.5
     @licensed MIT license
 
+    2017/07/24 0.5.001
     2017/07/03 0.5
     2017/04/28 0.1
 
@@ -504,8 +505,8 @@
                     left : offset.left,
 
                     // parent()基準の擬似的なoffset
-                    ptop  : offset.top - parent.top,
-                    pleft : offset.left - parent.left,
+                    ptop  : offset.top - parent.top - parseInt(obj.target.css("margin-top")),
+                    pleft : offset.left - parent.left - parseInt(obj.target.css("margin-left")),
 
                     // scrollContainer基準の擬似的なoffset
                     vtop  : virtual.top,
